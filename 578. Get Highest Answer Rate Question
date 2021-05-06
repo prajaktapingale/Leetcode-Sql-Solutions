@@ -1,0 +1,5 @@
+/* Write your T-SQL query statement below */
+WITH T1(qid,ans)as (select question_id,count(question_id) from survey_log where action='answer' group by question_id),
+T2(qid,show) as (select question_id,count(question_id) from survey_log where action='show' group by question_id),
+T3 (qid,answer_rate) as (select T1.qid,cast(T1.ans as float)/cast(T2.show as float) as survey_log from T1 join T2 on T1.qid=T2.qid)
+select top 1 qid as survey_log from T3 where answer_rate in(select max(answer_rate) from T3) 

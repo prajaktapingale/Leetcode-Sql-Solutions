@@ -1,0 +1,8 @@
+# Write your MySQL query statement below
+
+with t1 as
+(select id, CandidateId, count(CandidateId) over (partition by CandidateId) as countVotes
+from Vote)
+select distinct Name from Candidate c inner join t1 
+on c.id=t1.CandidateId
+where countVotes in (select max(countVotes) from t1)

@@ -1,0 +1,47 @@
+/* Write your T-SQL query statement below */
+/*select id = id,
+Jan_Revenue = [Jan],
+Feb_Revenue = [Feb],
+Mar_Revenue = [Mar],
+Apr_Revenue = [Apr],
+May_Revenue = [May],
+Jun_Revenue = [Jun],
+Jul_Revenue = [Jul],
+Aug_Revenue = [Aug],
+Sep_Revenue = [Sep],
+Oct_Revenue = [Oct],
+Nov_Revenue = [Nov],
+Dec_Revenue = [Dec] from
+    (select * from department pivot(
+    sum(revenue)
+    for month in(
+    [Jan],
+    [Feb],
+    [Mar],
+    [Apr],
+    [May],
+    [Jun],
+    [Jul],
+    [Aug],
+    [Sep],
+    [Oct],
+    [Nov],
+    [Dec])) t
+     )as pivot_table; */
+     
+select
+id,
+sum(case when month = 'Jan' then revenue end) as Jan_Revenue,
+sum(case when month = 'Feb' then revenue end) as Feb_Revenue,
+sum(case when month = 'Mar' then revenue end) as Mar_Revenue,
+sum(case when month = 'Apr' then revenue end) as Apr_Revenue,
+sum(case when month = 'May' then revenue end) as May_Revenue,
+sum(case when month = 'Jun' then revenue end) as Jun_Revenue,
+sum(case when month = 'Jul' then revenue end) as Jul_Revenue,
+sum(case when month = 'Aug' then revenue end) as Aug_Revenue,
+sum(case when month = 'Sep' then revenue end) as Sep_Revenue,
+sum(case when month = 'Oct' then revenue end) as Oct_Revenue,
+sum(case when month = 'Nov' then revenue end) as Nov_Revenue,
+sum(case when month = 'Dec' then revenue end) as Dec_Revenue
+from Department
+group by id;

@@ -1,0 +1,5 @@
+# Write your MySQL query statement below
+
+select avg(number) as median from
+(select *, sum(frequency) over(order by number) freq, (sum(frequency) over())/2 median_num from numbers) t1
+where median_num between (freq-frequency) and freq

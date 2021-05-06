@@ -1,0 +1,8 @@
+with T1(req_id,counts) as
+(select requester_id,count(requester_id) as counts from request_accepted group by requester_id),
+T2 (accepter_id,counts) as 
+(select accepter_id,count(accepter_id) as counts from request_accepted group by accepter_id),
+T3 (id,counts) as  
+(select req_id,counts from T1 UNION ALL select accepter_id,counts from T2),
+T4(id,num) as (select id,sum(counts) from T3 group by id)
+select top 1 *  from T4 where num in (select max(num) from T4)

@@ -1,0 +1,29 @@
+# Write your MySQL query statement below
+select t1.spend_date, t1.platform, sum(coalesce(t2.total_amount,0)) as total_amount, sum(coalesce(t2.total_users,0)) as total_users
+from
+(
+SELECT DISTINCT(spend_date), 'desktop' as platform 
+FROM Spending
+UNION
+SELECT DISTINCT(spend_date), 'mobile' as platform 
+FROM Spending
+UNION
+SELECT DISTINCT(spend_date), 'both' as platform 
+FROM Spending
+order by spend_date
+) t1
+left join 
+(
+    select spend_date, case 
+when count(platform)=1 then platform
+else 'both'
+end as platform,
+sum(amount) as total_amount, count(distinct user_id) as total_users
+from spending
+group by spend_date, user_id
+    ) t2
+    on t1.spend_date=t2.spend_date and t1.platform=t2.platform
+    group by spend_date, platform
+
+
+

@@ -1,0 +1,8 @@
+/* Write your T-SQL query statement below */
+select id, month, salary from(SELECT  id, 
+        month, 
+		-- Every 3 months. ROWS 2 PRECEDING indicates the number of rows or values to precede the current row (1 + 2)
+        SUM(salary) OVER(PARTITION BY id  ORDER BY month ROWS 2 PRECEDING) as Salary,
+        dense_rank() over (partition by Id order by month desc) as ranks        
+FROM Employee) 
+e where ranks>1

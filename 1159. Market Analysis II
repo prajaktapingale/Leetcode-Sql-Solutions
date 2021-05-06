@@ -1,0 +1,33 @@
+select seller_id, 2nd_item_fav_brand
+from
+(select user_id as seller_id, case
+when total_items<2 then 'no'
+when total_items>=2 then (case
+                          when item_rank=2 and item_brand=favorite_brand then 'yes'
+                          when item_rank=2 and item_brand!=favorite_brand then 'no'
+                          end)
+end as 2nd_item_fav_brand
+from
+(select u.user_id, o.seller_id, o.order_date, o.item_id, i.item_brand, u.favorite_brand,
+rank() over (partition by user_id order by order_date) as item_rank,
+count(o.item_id) over (partition by u.user_id) as total_items
+from users u 
+left join orders o 
+on u.user_id=o.seller_id
+left join items i
+on o.item_id=i.item_id) t1) t2
+where 2nd_item_fav_brand is not null
+
+
+select user_id as seller_id, 
+        (case 
+            when favorite_brand = (
+                            select i.item_brand
+                            from Orders o left join Items i
+                            on o.item_id = i.item_id
+                            where o.seller_id = u.user_id 
+                            order by o.order_date
+                            limit 1 offset 1
+                                  ) then "yes" else "no" end
+         ) as "2nd_item_fav_brand"   
+from Users u  

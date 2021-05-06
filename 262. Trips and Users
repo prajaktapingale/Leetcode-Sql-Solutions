@@ -1,0 +1,26 @@
+# Write your MySQL query statement below
+
+select Request_at as Day, round(((TotalRides-NumberOfRides)/TotalRides), 2) as 'Cancellation Rate'
+from
+(select Request_at, Status, NumberOfRides, sum(NumberOfRides) as TotalRides from
+(select Request_at, Status, count(Id) as NumberOfRides from
+(select t1.Id, t1.Client_Id, t1.Driver_Id, t1.Status, t1.Request_at from
+(select * from Trips t join Users u on t.Client_Id=u.Users_Id where Banned='No') t1) t2
+group by Request_at, Status) t3
+group by Request_at) t4
+
+
+# Write your MySQL query statement below
+
+WITH s AS(
+SELECT Trips.*
+FROM Trips, Users
+WHERE Client_Id IN (SELECT Users_Id FROM Users WHERE Users.Banned ='No')
+AND Driver_Id IN (SELECT Users_Id FROM Users WHERE Users.Banned ='No')
+AND Request_at BETWEEN '2013-10-01' AND '2013-10-03')
+
+SELECT s.Request_at AS Day,
+ROUND(SUM(s.Status!='completed')/COUNT(s.Status),2) AS 'Cancellation Rate'
+FROM s
+GROUP BY s.Request_at
+ORDER BY s.Request_at;

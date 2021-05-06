@@ -1,0 +1,20 @@
+# Write your MySQL query statement below
+select t1.post_id, coalesce(t2.number_of_comments,0) as number_of_comments
+from (select distinct sub_id as post_id
+      from submissions
+     where parent_id is null) t1
+left join (select parent_id, count(distinct sub_id) as number_of_comments
+           from submissions
+           where parent_id is not null
+           group by parent_id) t2
+on t1.post_id=t2.parent_id
+order by post_id
+
+
+SELECT
+    DISTINCT sub_id AS post_id,
+    (SELECT COUNT(DISTINCT sub_id) FROM Submissions S2 WHERE S1.sub_id = S2.parent_id) AS number_of_comments
+FROM
+    Submissions AS S1
+WHERE parent_id IS NULL
+ORDER BY sub_id

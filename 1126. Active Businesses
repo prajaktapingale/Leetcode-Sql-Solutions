@@ -1,0 +1,12 @@
+# Write your MySQL query statement below
+select business_id
+from
+(select business_id, event_type, sum(if(occurences>avg_occurences, 1, 0)) as greater
+from
+(select business_id, event_type, occurences,
+avg(occurences) over (partition by event_type) as avg_occurences
+from events) t1
+group by business_id, event_type) t2
+group by business_id
+having sum(greater)>1
+order by business_id

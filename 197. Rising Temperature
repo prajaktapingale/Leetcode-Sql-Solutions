@@ -1,0 +1,7 @@
+# Write your MySQL query statement below
+select t1.id from
+(select w1.id, w1.recordDate as PreviousDate, w1.Temperature as PreviousTemp, 
+w2.recordDate as CurrentDate, w2.Temperature as CurrentTemp 
+from Weather w1 join Weather w2
+on w1.id=w2.id+1) t1
+where PreviousTemp>CurrentTemp

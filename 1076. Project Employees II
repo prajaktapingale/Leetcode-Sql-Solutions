@@ -1,0 +1,22 @@
+# Write your MySQL query statement below
+select project_id
+from project
+group by project_id
+having count(employee_id) =
+(select max(emp_count)
+from
+(select project_id, count(employee_id) as emp_count
+from project
+group by project_id) t1) 
+
+
+# Write your MySQL query statement below
+select project_id
+from project
+group by project_id
+having count(employee_id) =
+(select count(employee_id)
+from project
+group by project_id
+order by count(employee_id) desc
+limit 1) 

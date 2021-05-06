@@ -1,0 +1,11 @@
+/* Write your T-SQL query statement below */
+
+with t1 as 
+(select s.*, d.dept_name
+from student s right join department d
+on s.dept_id=d.dept_id)
+
+select t1.dept_name, count(distinct student_id) as student_number
+from t1
+group by dept_name
+order by student_number desc, dept_name

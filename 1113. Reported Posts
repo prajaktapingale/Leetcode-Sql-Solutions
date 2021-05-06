@@ -1,0 +1,6 @@
+# Write your MySQL query statement below
+select extra as report_reason, count(distinct post_id) as report_count
+from actions
+where action='report'
+and action_date = cast('2019-07-05' as date)-1
+group by extra

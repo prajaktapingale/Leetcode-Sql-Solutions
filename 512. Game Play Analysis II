@@ -1,0 +1,5 @@
+select player_id, device_id from
+(select player_id, device_id, dense_rank() over (partition by player_id order by event_date) as ranks
+from Activity) t1
+where ranks = 1
+order by player_id

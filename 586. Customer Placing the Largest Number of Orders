@@ -1,0 +1,8 @@
+/* Write your T-SQL query statement below */
+with t1 as
+(select customer_number, count(customer_number) as cnt
+from Orders
+group by customer_number)
+select customer_number
+from t1
+where cnt in (select max(cnt) from t1)

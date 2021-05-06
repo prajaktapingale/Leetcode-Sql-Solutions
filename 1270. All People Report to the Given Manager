@@ -1,0 +1,16 @@
+SELECT e1.employee_id
+FROM Employees e1,
+     Employees e2,
+     Employees e3
+WHERE e1.manager_id = e2.employee_id
+  AND e2.manager_id = e3.employee_id
+  AND e3.manager_id = 1 
+  AND e1.employee_id != 1
+  
+  
+/* Write your T-SQL query statement below */
+with Managers(eid,ename,mname) as (select employee_id, employee_name, manager_id
+from Employees where manager_id =1 and employee_id!=1),
+subManagers(eid,ename,mname) as (select * from Employees where manager_id in (select eid from Managers) union select * from Managers),
+result(eid,ename,mid) as (select * from Employees where manager_id in (select eid from subManagers) union select * from subManagers)
+select eid as employee_id from result

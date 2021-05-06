@@ -1,0 +1,14 @@
+select stats as period_state, min(day) as start_date, max(day) as end_date
+from
+(select day, stats, rk, rank() over (order by day) as overall_rank,
+(rank() over (order by day)-rk) as diff
+from
+(SELECT fail_date AS day, 'failed' AS stats, RANK() OVER (ORDER BY fail_date) AS rk
+FROM Failed
+WHERE fail_date BETWEEN '2019-01-01' AND '2019-12-31'
+UNION 
+SELECT success_date AS day, 'succeeded' AS stats, RANK() OVER (ORDER BY success_date) AS rk
+FROM Succeeded
+WHERE success_date BETWEEN '2019-01-01' AND '2019-12-31') t1) t2
+group by diff, stats
+order by start_date

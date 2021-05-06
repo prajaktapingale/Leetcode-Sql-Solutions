@@ -1,0 +1,12 @@
+#Cartesian product of p1, p2
+#Elimate same value combinations of x and y from both
+#Use distance formula for the remaining and apply MIN to find the least distance.
+
+select ROUND(SQRT(min((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y))),2) as shortest
+from point_2d p1,point_2d p2
+where p1.x <> p2.x or p1.y <> p2.y;
+
+# Write your MySQL query statement below
+select round(sqrt(min(pow(p1.x-p2.x,2) + pow(p1.y-p2.y,2))),2) as shortest
+from point_2d p1, point_2d p2
+where (p1.x,p1.y)!=(p2.x,p2.y)
